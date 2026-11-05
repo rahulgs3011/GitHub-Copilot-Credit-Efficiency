@@ -1,0 +1,209 @@
+T
+1. stay on updated vs code version 
+here are actual VS Code improvements designed to reduce token usage
+I found something particularly relevant: the VS Code engineering team published an article on June 17, 2026, specifically about improving token efficiency in GitHub Copilot.
+
+This is not just a general recommendation. It describes actual engineering changes to the Copilot agent infrastructure. 
+
+https://code.visualstudio.com/blogs/2026/06/17/improving-token-efficiency-in-github-copilot
+
+
+
+
+
+Here are the most interesting improvements.
+A. Prompt caching optimization
+Cost optimization
+When you use Copilot Chat, requests can contain repeated information:
+- System instructions.
+- Repository context.
+- Tool definitions.
+- Previous conversation messages.
+- File contents.
+Instead of processing all repeated information from scratch, supported models can reuse cached context.
+
+Why this matters:
+
+Suppose you're debugging an API across 15 chat messages. Some instructions and context are repeated between requests.
+
+With prompt caching, supported models can reuse previously processed context, making repeated input cheaper.
+
+VS Code's engineering team has improved cache retention and cache breakpoint placement.
+
+For supported models, cached input can cost up to 10 times less than uncached input, depending on the model's pricing. 
+
+https://docs.github.com/en/copilot/tutorials/optimize-ai-usage?utm_source=chatgpt.com
+
+
+
+B. Tool Search – loading tools only when required
+Very interesting improvement
+This is particularly useful in Agent mode.
+
+Imagine Copilot has access to:
+- Read files
+- Edit files
+- Terminal
+- Search
+- Git
+- MCP servers
+- Other extensions
+Traditionally, tool definitions can consume context even when the agent doesn't need all those tools.
+
+The newer tool-search approach allows Copilot to discover and load relevant tool definitions when required instead of including every complete definition upfront.
+
+Result: Less unnecessary context sent to the model.
+
+In VS Code's reported experiments:
+Model	Reduction in median tokens per turn
+GPT-5.4	9.81%
+GPT-5.5	8.61%
+
+These are experimental measurements reported by the VS Code team, not guaranteed savings for every user. 
+
+Visual Studio Code
+
+
+
+C. Background Todo Agent
+Experimental feature
+Introduced in VS Code 1.119.
+
+When an agent works on a large task, it maintains a todo list.
+
+Previously, the main agent could spend additional model calls managing and updating that list.
+
+The background Todo Agent moves that responsibility to a lightweight background agent.
+
+This allows the primary model to focus on implementation instead of spending additional tokens managing progress.
+
+Setting:
+{
+  "github.copilot.chat.agent.backgroundTodoAgent.enabled": true
+}
+
+
+This is particularly interesting for multi-step development tasks. 
+
+Visual Studio Code
+
+
+
+2. Which VS Code version should you use?
+There are several relevant milestones:
+VS Code version	Relevant improvement
+1.118	Prompt caching efficiency improvements
+1.119	Experimental background Todo Agent
+1.120	Minimum version recommended by GitHub for accurate usage-based billing information
+Latest Stable	Recommended to receive the newest Copilot improvements
+
+GitHub explicitly recommends VS Code 1.120 or later for usage-based billing. Older versions may display incorrect model pricing and inaccurate usage information. 
+
+Visual Studio Code
++2
+
+
+
+
+My recommendation is to use the latest Stable version rather than downgrading to a particular version just to access an optimization.
+
+
+4. Other important practices that can save credits
+These aren't necessarily version-specific, but they work alongside the newer improvements.
+Practice	Why it helps
+Start a new chat for unrelated tasks	Prevents irrelevant history from accumulating
+Reuse an existing chat for the same task	Avoids repeating relevant explanations
+Avoid attaching entire repositories	Reduces unnecessary context
+Select only relevant files	Keeps prompts focused
+Use the appropriate model	Avoids paying more for simple tasks
+Plan before implementation	Reduces unnecessary agent exploration
+Avoid unnecessary MCP tools	Reduces tool-definition overhead
+Don't repeatedly change reasoning settings	Helps preserve cache reuse
+
+GitHub also recommends separating research, planning and implementation into focused phases. 
+
+GitHub Docs
++1
+
+
+
+5. A particularly useful discovery: Cost Tips
+The current VS Code documentation also describes a command:
+/chronicle:cost-tips
+
+
+You can run this inside a Copilot Chat session to get recommendations based on your recent activity and usage patterns.
+
+This is worth testing because it can help identify opportunities to reduce unnecessary consumption.
+
+
+
+2 . use tool output compression 
+
+chat.tools.compressoutput.enablled
+
+chat.tools.ternimal.ouputdeltas
+
+
+explain these two features and how it does and how these helps as 
+
+3. optimized model choice 
+
+put here the github ai model comaprioson table here 
+which could help whichh modal to use as per the usage or task
+
+
+4.optimize for the cache usage
+put here the github ai model comaprioson table here 
+which could help whichh modal to use as per the usage or task
+
+5. Be conise with the prompt 
+
+mention here some examples an usage of this opic how to use and we can leverage these an optimization
+
+also mentioned in detail about the caveman skills
+
+tips section 
+
+1. keep the sessions short and focused 
+2. treat instructions like code keep it clean and modular
+3.reference what you want and needed
+4.match the modal to your choice 
+from web go to github documentation and get the model details and provide the table here 
+5. use the agent mode for the agent mode for longer session and session where high level of architecture is required
+
+token billing structure
+
+bill = output tokens + input tokens + cache tokens
+
+sytem instruction 
+copilot instruction
+tool schema
+conversation history 
+your file contents
+
+to be best to added in md file
+
+#output rules
+code only  no explanation unless explicitly asked
+no markdown preamable
+no 'here is the code' Intro
+no closing summeries
+
+before (45 tokens)
+"could you please help me write a python function that reads the csv file and returns a filtered dataframe where status is active"
+after (14 token)
+"write python fn: read csv return df where status is active
+
+scope the context with applyTo
+
+use. diffreent md files agent file for different task dont use irrelevant md o agent file for the task
+
+use spearate conversation
+for diffrent task use diffrent conversion 
+
+option to exclude some files 
+there are some setting the vs code chat which can be used to exclude some files from the search aand edit so that unwanted files caa excluded and token can be saved 
+
+
+
