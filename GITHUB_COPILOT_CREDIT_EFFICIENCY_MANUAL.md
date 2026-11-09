@@ -1,9 +1,3 @@
----
-title: GitHub Copilot Credit Efficiency Manual
-description: Enterprise-grade technical manual for optimizing token usage and reducing AI credits consumption in GitHub Copilot
-tags: [copilot, optimization, token-efficiency, credits, enterprise, technical-reference]
----
-
 # GitHub Copilot Credit Efficiency Manual
 
 **Optimize token consumption and maximize AI credit efficiency with proven strategies, advanced techniques, and enterprise-grade workflows.**
